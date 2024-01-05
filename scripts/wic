@@ -61,7 +61,7 @@ from wic import help as hlp
 def wic_logger():
     """Create and convfigure wic logger."""
     logger = logging.getLogger('wic')
-    logger.setLevel(logging.INFO)
+    logger.setLevel(logging.DEBUG)
 
     handler = logging.StreamHandler()
 

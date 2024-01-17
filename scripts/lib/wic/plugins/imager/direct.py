@@ -511,6 +511,17 @@ class PartitionedImage():
 
         return exec_native_cmd(cmd, self.native_sysroot)
 
+    def _write_disk_guid(self):
+        if self.ptable_format in ('gpt', 'gpt-hybrid'):
+            if os.getenv('SOURCE_DATE_EPOCH'):
+                self.disk_guid = uuid.UUID(int=int(os.getenv('SOURCE_DATE_EPOCH')))
+            else:
+                self.disk_guid = uuid.uuid4()
+
+            logger.debug("Set disk guid %s", self.disk_guid)
+            sfdisk_cmd = "sfdisk --disk-id %s %s" % (self.path, self.disk_guid)
+            exec_native_cmd(sfdisk_cmd, self.native_sysroot)    
+
     def create(self):
         logger.debug("Creating sparse file %s", self.path)
         with open(self.path, 'w') as sparse:
@@ -524,6 +535,8 @@ class PartitionedImage():
         with open(self.path, 'r+b') as img:
             img.seek(0x1B8)
             img.write(self.identifier.to_bytes(4, 'little'))
+
+        self._write_disk_guid()
 
         logger.debug("Creating partitions")
 

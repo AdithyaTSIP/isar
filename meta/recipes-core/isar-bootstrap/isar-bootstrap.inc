@@ -297,6 +297,8 @@ do_bootstrap() {
         if [ "${BOOTSTRAP_FOR_HOST}" = "0" ]; then
             arch_param="--arch=${DISTRO_ARCH}"
         fi
+
+	SOURCE_DATE_EPOCH=${SOURCE_DATE_EPOCH} \
         ${DEBOOTSTRAP} $debootstrap_args \
                        $arch_param \
                        ${@get_distro_components_argument(d)} \

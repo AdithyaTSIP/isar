@@ -37,7 +37,12 @@ def image_create_groups(d: "DataSmart") -> None:
     """
     entries = (d.getVar("GROUPS") or "").split()
     rootfsdir = d.getVar("ROOTFSDIR")
-    chroot = ["sudo", "-E", "chroot", rootfsdir]
+    source_date_epoch = d.getVar("SOURCE_DATE_EPOCH") or ""
+    if source_date_epoch:
+        source_date_epoch_string = "SOURCE_DATE_EPOCH=" + source_date_epoch
+        chroot =  ["sudo", "-E", source_date_epoch_string, "chroot", rootfsdir]
+    else:
+        chroot = ["sudo", "-E", "chroot", rootfsdir]
 
     for entry in entries:
         args = []
@@ -75,7 +80,12 @@ def image_create_users(d: "DataSmart") -> None:
 
     entries = (d.getVar("USERS") or "").split()
     rootfsdir = d.getVar("ROOTFSDIR")
-    chroot = ["sudo", "-E", "chroot", rootfsdir]
+    source_date_epoch = d.getVar("SOURCE_DATE_EPOCH") or ""
+    if source_date_epoch:
+        source_date_epoch_string = "SOURCE_DATE_EPOCH=" + source_date_epoch
+        chroot =  ["sudo", "-E", source_date_epoch_string, "chroot", rootfsdir]
+    else:
+        chroot = ["sudo", "-E", "chroot", rootfsdir]
 
     for entry in entries:
         args = []
